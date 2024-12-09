@@ -41,7 +41,6 @@ class RegisteredUserController extends Controller
         ]);
 
         $id = DB::table('Клиент')->insertGetId([
-            'ФИО' => $request->name,
             'Дата_рождения' => Carbon::parse($request->date),
             'Номер_телефона' => $request->tel,
             'Адрес_проживания' => $request->address,
@@ -81,7 +80,6 @@ class RegisteredUserController extends Controller
         ]);
 
         $id = DB::table('Персонал')->insertGetId([
-            'ФИО' => $request->name,
             'Дата_рождения' => Carbon::parse($request->date),
             'Должность' => $posts[$request->post],
         ], 'Номер_работника');

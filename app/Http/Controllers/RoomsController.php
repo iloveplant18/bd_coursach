@@ -26,18 +26,6 @@ class RoomsController extends Controller
                     (Дата_заезда >= '$start_date' and Дата_заезда <= '$end_date')
                     or (Дата_выезда >= '$start_date' and Дата_выезда <= '$end_date')
                 ))");
-//            $query->whereExists(function ($query) use ($request) {
-//                DB::table('Бронирование')
-//                    ->where(function ($query) use ($request) {
-//                        $query->where('Дата_заезда', '>=', $request->start_date)
-//                            ->where('Дата_заезда', '<=', $request->end_date);
-//                    })
-//                    ->orWhere(function ($query) use ($request) {
-//                        $query->where('Дата_выезда', '>=', $request->start_date)
-//                            ->where('Дата_заезда', '<=', $request->end_date);
-//                    })
-//                    ->where('Номер.Номер_комнаты', '=', 'Бронирование.Номер_комнаты')->dd();
-//            });
         })
         ->join('Тариф', 'Тариф.Код_тарифа',  '=', 'Номер.Код_тарифа')
         ->when($request->room_type, function($query) use ($request) {
@@ -51,7 +39,10 @@ class RoomsController extends Controller
     }
 
     public function show(int $id): View {
-        $room = DB::table('Номер')->where('Номер_комнаты', $id);
+        $room = DB::table('Номер')
+            ->join('Тариф', 'Тариф.Код_тарифа', '=', 'Номер.Код_тарифа')
+            ->where('Номер_комнаты', '=', $id)
+            ->first();
         return view('rooms.show', ['room' => $room]);
     }
 }

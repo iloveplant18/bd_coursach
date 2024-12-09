@@ -1,39 +1,59 @@
+@php use Illuminate\Support\Facades\Http; @endphp
 <x-app-layout>
     <x-slot name="header">
         Logovo Babushki - your favorite mini-hotel
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex gap-8 flex-wrap justify-center md:justify-start">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <a href="{{ route('tariffs') }}">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Tariffs</h5>
-                </a>
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    Checkout our tariffs to know about actual prices
-                </p>
-                <a href="{{ route('tariffs') }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Checkout
-                    <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                    </svg>
-                </a>
-            </div>
+            @auth()
+                @can('do-client-action')
+                    @if($nearestBooking)
+                        <div class="p-6 flex flex-col gap-y-4 justify-between items-center gap-x-8 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 md:flex-row ">
+                            <span class="text-3xl">Nearest booking:</span>
+                            <div class="flex items-center gap-x-4">
+                                <span class="text-nowrap">{{ $nearestBooking->Дата_заезда }}</span>-<span class="text-nowrap">{{ $nearestBooking->Дата_выезда }}</span>
+                                <x-alternative-button-or-link class="text-nowrap" type="link" href="{{ route('bookings') }}">
+                                    To bookings
+                                </x-alternative-button-or-link>
+                            </div>
+                            <div class="flex items-center gap-x-4">
+                                <span>Room number: {{ $nearestBooking->Номер_комнаты }}</span>
+                                <x-alternative-button-or-link class="text-nowrap" type="link" href="{{ route('rooms', $nearestBooking->Номер_комнаты) }}">
+                                    To room
+                                </x-alternative-button-or-link>
+                            </div>
+                        </div>
+                    @endif
+                @endcan
+            @endauth
 
-            <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <a href="{{ route('rooms') }}">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Rooms</h5>
-                </a>
-                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                    Jump to rooms page and see all our available rooms to choose from
-                </p>
-                <a href="{{ route('rooms') }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Jump
-                    <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                    </svg>
-                </a>
+            <div class="mt-8 grid justify-center md:grid-cols-3 gap-8">
+                <article class="flex flex-col max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <a href="{{ route('tariffs') }}">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Tariffs</h5>
+                    </a>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                        Checkout our tariffs to know about actual prices
+                    </p>
+
+                    <x-alternative-button-or-link class="mt-auto w-fit" type="link" href="{{ route('tariffs') }}" :withArrow="true">
+                        Checkout
+                    </x-alternative-button-or-link>
+                </article>
+
+                <article class="flex flex-col max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <a href="{{ route('rooms') }}">
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Rooms</h5>
+                    </a>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                        Jump to rooms page and see all our available rooms to choose from
+                    </p>
+                    <x-alternative-button-or-link class="mt-auto w-fit" type="link" href="{{ route('rooms') }}" :withArrow="true">
+                        Jump
+                    </x-alternative-button-or-link>
+                </article>
             </div>
 
         </div>

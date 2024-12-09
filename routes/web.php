@@ -1,21 +1,49 @@
 <?php
 
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\DefaultController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoomsController;
 use App\Http\Controllers\TariffsController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'dashboard');
-Route::view('/dashboard', 'dashboard')->name('dashboard');
+Route::get('/', [DefaultController::class, 'dashboard']);
+Route::get('/dashboard', [DefaultController::class, 'dashboard'])->name('dashboard');
 
 Route::prefix('/rooms')->controller(RoomsController::class)->group(function () {
     Route::get('/', 'index')->name('rooms');
     Route::get('/{id}', 'show')->name('rooms.show');
 });
 
-Route::controller(TariffsController::class)->group(function () {
-    Route::get('/tariffs', 'index')->name('tariffs');
-    Route::patch('/tariffs/{tariff}', 'update')->name('tariffs.update');
+Route::prefix('/tariffs')->controller(TariffsController::class)->group(function () {
+    Route::get('/', 'index')->name('tariffs');
+    Route::patch('/{tariff}', 'update')->name('tariffs.update');
+});
+
+Route::prefix('/bookings')->controller(BookingController::class)->group(function () {
+    Route::get('/', 'index')
+        ->middleware('auth')
+        ->can('do-client-action')
+        ->name('bookings');
+    Route::post('/', 'store')
+        ->middleware('auth')
+        ->can('do-client-action')
+        ->name('bookings.store');
+    Route::get('/{booking}', 'edit')
+        ->middleware('auth')
+        ->can('do-client-action')
+        ->can('update-booking', 'booking')
+        ->name('bookings.edit');
+    Route::patch('/{booking}', 'update')
+        ->middleware('auth')
+        ->can('do-client-action')
+        ->can('update-booking', 'booking')
+        ->name('bookings.update');
+    Route::delete('/{booking}', 'destroy')
+        ->middleware('auth')
+        ->can('do-client-action')
+        ->can('update-booking', 'booking')
+        ->name('bookings.destroy');
 });
 
 Route::middleware('auth')->group(function () {
@@ -24,4 +52,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

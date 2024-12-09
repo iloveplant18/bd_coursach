@@ -15,6 +15,13 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    @auth
+                        @can('do-client-action')
+                            <x-nav-link :href="route('bookings')" :active="request()->routeIs('bookings')">
+                                Bookings
+                            </x-nav-link>
+                        @endcan
+                    @endauth
                 </div>
             </div>
 

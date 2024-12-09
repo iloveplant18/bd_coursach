@@ -31,7 +31,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="max-w-7xl mx-auto mt-8">
+            <main class="max-w-7xl mx-auto mt-8 px-7">
                 {{ $slot }}
             </main>
         </div>
