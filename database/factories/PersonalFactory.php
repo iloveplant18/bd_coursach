@@ -17,6 +17,7 @@ class PersonalFactory extends Factory
     public function definition(): array
     {
         return [
+            'ФИО' => $this->faker->name(),
             'Дата_рождения' => $this->faker->dateTimeBetween('-40 years', '-18 years'),
             'Должность' => $this->faker->randomElement(['Администратор', 'Официант', 'Горничная']),
         ];

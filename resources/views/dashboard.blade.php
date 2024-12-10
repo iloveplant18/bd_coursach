@@ -20,7 +20,7 @@
                             </div>
                             <div class="flex items-center gap-x-4">
                                 <span>Room number: {{ $nearestBooking->Номер_комнаты }}</span>
-                                <x-alternative-button-or-link class="text-nowrap" type="link" href="{{ route('rooms', $nearestBooking->Номер_комнаты) }}">
+                                <x-alternative-button-or-link class="text-nowrap" type="link" href="{{ route('rooms.show', $nearestBooking->Номер_комнаты) }}">
                                     To room
                                 </x-alternative-button-or-link>
                             </div>

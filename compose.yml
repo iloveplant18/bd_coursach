@@ -1,0 +1,11 @@
+services:
+  db:
+    image: postgres
+    container_name: liana_coursach_db
+    ports:
+      - 5432:5432
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 123
+

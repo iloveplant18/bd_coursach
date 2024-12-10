@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('Номер', function (Blueprint $table) {
-            $table->bigIncrements('Номер_комнаты')->change();
+        Schema::create('Услуга', function (Blueprint $table) {
+            $table->id('Код_услуги');
+            $table->string('Описание_услуги', 255);
+            $table->decimal('Стоимость', 10, 2);
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('Номер', function (Blueprint $table) {
-            $table->integer('Номер_комнаты')->change();
-        });
+        Schema::dropIfExists('Услуга');
     }
 };

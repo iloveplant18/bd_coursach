@@ -17,7 +17,7 @@ class TariffFactory extends Factory
     public function definition(): array
     {
         return [
-            'Название' => $this->faker->word(),
+            'Название' => $this->faker->randomElement(['Люкс', 'Стандартный', 'Эконом']),
             'Цена_за_сутки' => $this->faker->numberBetween(5,30) . '00',
         ];
     }

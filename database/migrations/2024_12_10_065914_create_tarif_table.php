@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('Номер', function (Blueprint $table) {
-            $table->increments('Номер_комнаты')->change();
+        Schema::create('Тариф', function (Blueprint $table) {
+            $table->id('Код_тарифа');
+            $table->string('Название', 255);
+            $table->decimal('Цена_за_сутки', 10, 2);
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('Номер', function (Blueprint $table) {
-            $table->bigIncrements('Номер_комнаты')->change();
-        });
+        Schema::dropIfExists('Тариф');
     }
 };
