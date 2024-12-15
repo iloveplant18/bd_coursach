@@ -15,7 +15,7 @@
 @endphp
 <div
     @class([
-        "relative w-full p-4 overflow-hidden flex flex-wrap gap-3 justify-between items-center text-center border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700",
+        "relative w-full p-4 pt-9 overflow-hidden flex flex-wrap gap-3 justify-between items-center text-center border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700",
         'bg-gray-300' => ($bookingType === 'past'),
         'bg-white' => ($bookingType === 'current'),
         'bg-blue-100' => ($bookingType === 'future')
@@ -52,8 +52,8 @@
             {{ $booking->Стоимость }}₽
         </span>
     </div>
-    <x-alternative-button-or-link type="link" href="{{ route('bookings.edit', $booking->Номер_бронирования) }}">
-        Redact
+    <x-alternative-button-or-link type="link" href="{{ route('bookings.show', $booking->Номер_бронирования) }}">
+        Checkout
     </x-alternative-button-or-link>
     <span class="absolute top-0 right-0 px-3 py-1 bg-gray-600 text-white rounded">
         @if ($bookingType === 'past')

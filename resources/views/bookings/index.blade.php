@@ -4,7 +4,7 @@
     </x-slot>
 
     <section>
-        <ul>
+        <ul class="space-y-2">
             @foreach($bookings as $booking)
                 <li>
                     <x-booking :booking="$booking" />

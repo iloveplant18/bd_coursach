@@ -15,6 +15,15 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('rooms')" :active="request()->routeIs('rooms')">
+                        Rooms
+                    </x-nav-link>
+                    <x-nav-link :href="route('tariffs')" :active="request()->routeIs('tariffs')">
+                        Tariffs
+                    </x-nav-link>
+                    <x-nav-link :href="route('services')" :active="request()->routeIs('services')">
+                        Services
+                    </x-nav-link>
                     @auth
                         @can('do-client-action')
                             <x-nav-link :href="route('bookings')" :active="request()->routeIs('bookings')">

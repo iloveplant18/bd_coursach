@@ -4,7 +4,7 @@
         Logovo Babushki - your favorite mini-hotel
     </x-slot>
 
-    <div class="py-12">
+    <div>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             @auth()

@@ -86,6 +86,8 @@ class BookingController extends Controller
     }
 
     public function update(Request $request, Booking $booking) {
+        // TODO: do not update booking if its passed
+        // TODO: do not update Дата_заезда if booking current
         $request->validate([
             'start_date' => ['required', 'date', 'after_or_equal:now', 'date_format:m/d/Y'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date', 'date_format:m/d/Y'],
@@ -112,14 +114,20 @@ class BookingController extends Controller
         return redirect('/bookings');
     }
 
+    public function show(Booking $booking) {
+        return view('bookings.show', [
+            'booking' => $booking->load(['personal', 'room.tariff', 'inclusions.service'])
+        ]);
+    }
+
     private function checkIsPeriodAvailable(string $start_date, string $end_date, int $room_id): bool {
         $isPeriodAvailable = DB::table('Бронирование')
             ->whereRaw("
-                            $room_id = Бронирование.Номер_комнаты and
-                        (
-                            (Дата_заезда >= '$start_date' and Дата_заезда <= '$end_date')
-                            or (Дата_выезда >= '$start_date' and Дата_выезда <= '$end_date')
-                        )")->get()
+                $room_id = Бронирование.Номер_комнаты and
+            (
+                (Дата_заезда >= '$start_date' and Дата_заезда <= '$end_date')
+                or (Дата_выезда >= '$start_date' and Дата_выезда <= '$end_date')
+            )")->get()
             ->isEmpty();
         return $isPeriodAvailable;
     }

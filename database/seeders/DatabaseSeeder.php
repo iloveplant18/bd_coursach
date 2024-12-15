@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Client;
 use App\Models\Personal;
 use App\Models\Room;
+use App\Models\Service;
 use App\Models\Tariff;
 use App\Models\User;
 
@@ -22,7 +23,6 @@ class DatabaseSeeder extends Seeder
     {
         User::truncate();
         Client::truncate();
-
 
         $client = Client::factory()->create([
             'Номер_телефона' => '+79799799799',
@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
             'password' => 'officiantofficiant',
         ]);
 
-        Booking::factory()->count(3)->for(
+        Booking::factory()->count(3)->oneAfterAnother()->for(
             $client
         )->for(
             $personal
@@ -62,5 +62,7 @@ class DatabaseSeeder extends Seeder
                 Tariff::factory()
             )
         )->create();
+
+        Service::factory()->count(40)->create();
     }
 }
