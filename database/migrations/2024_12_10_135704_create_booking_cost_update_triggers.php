@@ -58,13 +58,6 @@ return new class extends Migration
             FOR EACH ROW
             EXECUTE PROCEDURE update_booking_cost();
         ");
-        DB::statement("
-            -- Триггер для обновления стоимости бронирования при изменении таблицы `Включение`
-            CREATE TRIGGER update_booking_cost_trigger_inclusion
-            AFTER INSERT OR UPDATE OR DELETE ON Включение
-            FOR EACH ROW
-            EXECUTE PROCEDURE update_booking_cost();
-        ");
     }
 
     /**
@@ -72,7 +65,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("drop trigger if exists update_booking_cost_trigger_inclusion on Включение");
         DB::statement("drop trigger if exists update_booking_cost_trigger_update on Бронирование");
         DB::statement("drop trigger if exists update_booking_cost_trigger on Бронирование");
         DB::statement("drop function if exists update_booking_cost()");

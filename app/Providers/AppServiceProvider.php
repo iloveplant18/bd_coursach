@@ -24,9 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Model::preventSilentlyDiscardingAttributes($this->app->isLocal());
+        Model::unguard();
         Gate::define('do-client-action', function ($user) {
-            return $user->client_code;
+            return $user->client_code || $user->personal->Должность === 'Администратор';
         });
         Gate::define('do-personal-action', function ($user) {
             return $user->personal_number;
@@ -35,8 +35,11 @@ class AppServiceProvider extends ServiceProvider
             if ($user->client_code) {
                 return $booking->Код_клиента === $user->client_code;
             }
-            $personal = DB::table('Персонал')->where('Номер_работника', '=', $user->personal_number);
+            $personal = DB::table('Персонал')->where('Номер_работника', '=', $user->personal_number)->first();
             return $personal->Должность === 'Администратор';
+        });
+        Gate::define('do-admin-action', function (User $user) {
+            return $user->personal?->Должность === 'Администратор';
         });
     }
 }

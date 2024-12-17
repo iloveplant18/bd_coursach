@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DefaultController;
+use App\Http\Controllers\InclusionController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RealizationController;
 use App\Http\Controllers\RoomsController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\TariffsController;
 use Illuminate\Support\Facades\Route;
 
@@ -54,6 +58,43 @@ Route::prefix('/bookings')->controller(BookingController::class)->group(function
 Route::prefix('/services')->controller(ServiceController::class)->group(function () {
     Route::get('/', 'index')->name('services');
 });
+
+Route::prefix('/inclusions')->controller(InclusionController::class)->group(function () {
+    Route::get('/', 'index')
+        ->middleware('auth')
+        ->can('do-personal-action')
+        ->name('inclusions.index');
+    Route::get('/create/{booking}', 'create')
+        ->middleware('auth')
+        ->can('do-client-action')
+        ->can('update-booking', 'booking')
+        ->name('inclusions.create');
+    Route::post('/store/{booking}', 'store')
+        ->middleware('auth')
+        ->can('do-client-action')
+        ->can('update-booking', 'booking')
+        ->name('inclusions.store');
+    Route::delete('/destroy/{booking}', 'destroy')
+        ->middleware('auth')
+        ->can('do-client-action')
+        ->can('update-booking', 'booking')
+        ->name('inclusions.destroy');
+});
+
+Route::post('/realization/{inclusion}', [RealizationController::class, 'store'])
+    ->middleware('auth')
+    ->can('do-personal-action')
+    ->name('realizations.store');
+
+Route::get('/statistics', [StatisticController::class, 'index'])
+    ->middleware('auth')
+    ->can('do-admin-action')
+    ->name('statistics');
+
+Route::post('/payment/{booking}', [PaymentController::class, 'store'])
+    ->middleware('auth')
+    ->can('do-admin-action')
+    ->name('payment.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

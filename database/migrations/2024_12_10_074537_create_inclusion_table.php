@@ -21,7 +21,7 @@ return new class extends Migration
                 ->constrained('Услуга', 'Код_услуги')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->enum('Состояние', ['выполнено', 'ожидает']);
+            $table->enum('Состояние', ['выполнено', 'ожидает'])->default('ожидает');
             $table->date('Дата_включения');
         });
     }

@@ -15,6 +15,7 @@ $booking->Дата_выезда = \Illuminate\Support\Carbon::parse($booking->Д
         @method('patch')
         <input class="hidden" type="text" name="is_available_at_period" />
         <x-input-error :messages="$errors->get('is_available_at_period')" />
+        <x-input-error :messages="$errors->get('booking')" />
         <div class="sm:col-span-6">
             <x-input-label for="start_date" value="Start date" />
             <x-datepicker
@@ -48,7 +49,7 @@ $booking->Дата_выезда = \Illuminate\Support\Carbon::parse($booking->Д
         </div>
     </form>
 
-    <form id="destroy-form" method="post">
+    <form id="destroy-form" method="post" action="{{route('bookings.destroy', $booking->Номер_бронирования)}}">
         @csrf
         @method('delete')
     </form>

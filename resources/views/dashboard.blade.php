@@ -1,12 +1,16 @@
-@php use Illuminate\Support\Facades\Http; @endphp
+
 <x-app-layout>
     <x-slot name="header">
-        Logovo Babushki - your favorite mini-hotel
+        Logovo Babushki - your favorite
+        @can('do-personal-action')
+            employer
+        @else
+            mini-hotel
+        @endcan
     </x-slot>
 
     <div>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
             @auth()
                 @can('do-client-action')
                     @if($nearestBooking)
@@ -26,36 +30,84 @@
                             </div>
                         </div>
                     @endif
+
                 @endcan
             @endauth
 
-            <div class="mt-8 grid justify-center md:grid-cols-3 gap-8">
-                <article class="flex flex-col max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="{{ route('tariffs') }}">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Tariffs</h5>
-                    </a>
-                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+            @cannot('do-personal-action')
+                <div class="mt-8 grid justify-center md:grid-cols-3 gap-8">
+                    <x-inviting-card :href="route('tariffs')">
+                        <x-slot:title>
+                            Tariffs
+                        </x-slot:title>
                         Checkout our tariffs to know about actual prices
-                    </p>
+                        <x-slot:action>
+                            Checkout
+                        </x-slot:action>
+                    </x-inviting-card>
 
-                    <x-alternative-button-or-link class="mt-auto w-fit" type="link" href="{{ route('tariffs') }}" :withArrow="true">
-                        Checkout
-                    </x-alternative-button-or-link>
-                </article>
-
-                <article class="flex flex-col max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="{{ route('rooms') }}">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Rooms</h5>
-                    </a>
-                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                    <x-inviting-card :href="route('rooms')">
+                        <x-slot:title>
+                            Rooms
+                        </x-slot:title>
                         Jump to rooms page and see all our available rooms to choose from
-                    </p>
-                    <x-alternative-button-or-link class="mt-auto w-fit" type="link" href="{{ route('rooms') }}" :withArrow="true">
-                        Jump
-                    </x-alternative-button-or-link>
-                </article>
-            </div>
+                        <x-slot:action>
+                            Jump
+                        </x-slot:action>
+                    </x-inviting-card>
+                </div>
+            @endcannot
 
+            @auth()
+                @can('do-personal-action')
+                    Hi, {{ Auth::user()->name }}, let's do a good job today. There is a part of today tasks:
+                    <div>
+                        @if ($todayInclusions->isEmpty())
+                            <x-alert class="mt-4">
+                                <x-slot:title>
+                                    Halyava!
+                                </x-slot:title>
+                                No tasks at the moment! Get some tea and relax
+                            </x-alert>
+                        @else
+                            <ul class="mt-4 flex flex-col gap-5">
+                                @foreach($todayInclusions as $inclusion)
+                                    <li>
+                                        <x-inclusion
+                                            :number="$inclusion->Номер_применения"
+                                            :name="$inclusion->service->Описание_услуги"
+                                            :date="$inclusion->Дата_включения"
+                                            :room="$inclusion->booking->Номер_комнаты"
+                                            :clientName="$inclusion->booking->client->user->name"
+                                        />
+                                    </li>
+                                @endforeach
+                            </ul>
+                            <x-alternative-button-or-link
+                                class="mt-4"
+                                type="link"
+                                :href="route('inclusions.index')"
+                                withArrow
+                            >
+                                See all
+                            </x-alternative-button-or-link>
+                        @endif
+                    </div>
+                @endcan
+                @can('do-admin-action')
+                    <div class="mt-8 grid justify-center md:grid-cols-3 gap-8">
+                        <x-inviting-card :href="route('statistics')">
+                            <x-slot:title>
+                                Statistics
+                            </x-slot:title>
+                            Analyze various statistics about anything that going on at <mini-></mini->hotel
+                            <x-slot:action>
+                                Analyze
+                            </x-slot:action>
+                        </x-inviting-card>
+                    </div>
+                @endcan
+            @endauth
         </div>
     </div>
 </x-app-layout>

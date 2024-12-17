@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Personal;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class BookingController extends Controller
@@ -42,7 +44,7 @@ class BookingController extends Controller
                 'required',
                 'date',
                 function ($attribute, $value, $fail) {
-                    if (Carbon::parse($value) < now()) {
+                    if (Carbon::parse($value) < now()->format('m/d/Y')) {
                         $fail("The start date must be in future");
                     }
             }],
@@ -54,7 +56,7 @@ class BookingController extends Controller
                     if ($date < Carbon::parse($request->start_date)) {
                         $fail("The end date must be greater than the start date");
                     }
-                    if ($date < now()) {
+                    if ($date < now()->format('m/d/Y')) {
                         $fail("The end date must be in future");
                     }
             }],
@@ -86,11 +88,34 @@ class BookingController extends Controller
     }
 
     public function update(Request $request, Booking $booking) {
-        // TODO: do not update booking if its passed
-        // TODO: do not update Дата_заезда if booking current
         $request->validate([
-            'start_date' => ['required', 'date', 'after_or_equal:now', 'date_format:m/d/Y'],
-            'end_date' => ['required', 'date', 'after_or_equal:start_date', 'date_format:m/d/Y'],
+            'start_date' => [
+                'required',
+                'date',
+                'after_or_equal:now',
+                'date_format:m/d/Y',
+                function (string $attribute, mixed $value, Closure $fail) use ($booking) {
+                    if (
+                        $booking->Дата_заезда <= now()->format('Y-m-d')
+                        && $booking->Дата_заезда !== $value
+                    ) {
+                        $fail('Cant update start date of current or passed booking');
+                    }
+            }],
+            'end_date' => [
+                'required',
+                'date',
+                'after_or_equal:start_date',
+                'date_format:m/d/Y',
+                function (string $attribute, mixed $value, Closure $fail) use ($booking) {
+                    if (
+                        $booking->Дата_выезда < now()->format('Y-m-d')
+                        && $booking->Дата_выезда !== $value
+                    ) {
+                        $fail('Cant update end date of passed booking');
+                    }
+                },
+            ],
             'is_available_at_period' => [function($attribute, $value, $fail) use ($request, $booking) {
                 $start_date = Carbon::parse($request->start_date)->format('Y-m-d');
                 $end_date = Carbon::parse($request->end_date)->format('Y-m-d');
@@ -109,7 +134,12 @@ class BookingController extends Controller
         return redirect('/bookings');
     }
 
-    public function destroy(Booking $booking) {
+    public function destroy(Request $request, Booking $booking) {
+        $validator = Validator::make($request->all(), []);
+        if ($booking->Дата_заезда <= now()->format('Y-m-d')) {
+            $validator->errors()->add('booking', 'can not delete passed or started booking');
+            return redirect(route('bookings.edit', $booking->Номер_бронирования))->withErrors($validator);
+        }
         $booking->delete();
         return redirect('/bookings');
     }

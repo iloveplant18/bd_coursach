@@ -1,3 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --transition-duration: 150ms;
+        --timing-function: cubic-bezier( 0.175, 0.885, 0.32, 1.1);
+    }
+}
+
+@layer components {
+        .nav-link {
+        display: inline-block;
+        position: relative;
+    }
+
+    .nav-link::before, .nav-link::after {
+        content: '';
+        display: block;
+        box-sizing: border-box;
+        position: absolute;
+        height: 2px;
+        width: 2px;
+        opacity: 0;
+        @apply border-[3px] border-blue-400 rounded-sm
+    }
+
+    .nav-link::before {
+        top: 0;
+        right: 0;
+        border-bottom: none;
+        border-right: none;
+    }
+
+    .nav-link::after {
+        bottom: 0;
+        left: 0;
+        border-top: 0;
+        border-left: 0;
+    }
+
+    .nav-link:not(.active):hover::before, .nav-link:not(.active):hover::after {
+        opacity: 1;
+        animation-name: cover;
+        animation-duration: 0.7s;
+        animation-fill-mode: forwards;
+        animation-timing-function: var(--timing-function);
+    }
+
+    .nav-link.active::before, .nav-link.active::after {
+        width: 100%;
+        height: 100%;
+        opacity: 1;
+        transition-property: height;
+        transition-duration: 1s;
+    }
+
+    @keyframes cover {
+        from {
+        }
+        50% {
+            height: 2px;
+            width: 100%;
+        }
+        to {
+            width: 100%;
+            height: 85%;
+        }
+    }
+}

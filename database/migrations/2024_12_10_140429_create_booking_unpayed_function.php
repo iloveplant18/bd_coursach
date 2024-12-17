@@ -15,11 +15,11 @@ return new class extends Migration
         DB::statement("
             CREATE OR REPLACE FUNCTION find_unpaid_bookings()
             RETURNS TABLE (
-                Номер_бронирования INT,
+                Номер_бронирования BIGINT,
                 Стоимость_бронирования DECIMAL(10, 2),
                 Долг DECIMAL(10, 2),
                 ФИО_клиента VARCHAR(255),
-                Код_клиента INT
+                Код_клиента BIGINT
             ) AS $$
             BEGIN
               RETURN QUERY

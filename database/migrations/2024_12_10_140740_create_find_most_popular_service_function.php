@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("drop function if exists most_popular_service()");
+        DB::statement("drop function if exists most_popular_service();");
     }
 };

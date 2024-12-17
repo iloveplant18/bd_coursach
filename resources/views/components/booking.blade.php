@@ -2,10 +2,10 @@
 
 @php
     $bookingType = null;
-    if ($booking->Дата_выезда < now()) {
+    if ($booking->Дата_выезда < now()->format('Y-m-d')) {
         $bookingType = 'past';
     }
-    elseif ($booking->Дата_заезда < now()) {
+    elseif ($booking->Дата_заезда <= now()->format('Y-m-d')) {
         $bookingType = 'current';
     }
     else {

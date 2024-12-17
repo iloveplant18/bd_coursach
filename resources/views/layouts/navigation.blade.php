@@ -15,22 +15,32 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('rooms')" :active="request()->routeIs('rooms')">
-                        Rooms
-                    </x-nav-link>
-                    <x-nav-link :href="route('tariffs')" :active="request()->routeIs('tariffs')">
-                        Tariffs
-                    </x-nav-link>
-                    <x-nav-link :href="route('services')" :active="request()->routeIs('services')">
-                        Services
-                    </x-nav-link>
-                    @auth
-                        @can('do-client-action')
-                            <x-nav-link :href="route('bookings')" :active="request()->routeIs('bookings')">
-                                Bookings
-                            </x-nav-link>
-                        @endcan
-                    @endauth
+                    @cannot('do-personal-action')
+                        <x-nav-link :href="route('rooms')" :active="request()->routeIs('rooms')">
+                            Rooms
+                        </x-nav-link>
+                        <x-nav-link :href="route('tariffs')" :active="request()->routeIs('tariffs')">
+                            Tariffs
+                        </x-nav-link>
+                        <x-nav-link :href="route('services')" :active="request()->routeIs('services')">
+                            Services
+                        </x-nav-link>
+                    @endcannot
+                    @can('do-client-action')
+                        <x-nav-link :href="route('bookings')" :active="request()->routeIs('bookings')">
+                            Bookings
+                        </x-nav-link>
+                    @endcan
+                    @can('do-personal-action')
+                        <x-nav-link :href="route('inclusions.index')" :active="request()->routeIs('inclusions.index')">
+                            Ordered services
+                        </x-nav-link>
+                    @endcan
+                    @can('do-admin-action')
+                        <x-nav-link :href="route('statistics')" :active="request()->routeIs('statistics')">
+                            Statistics
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 

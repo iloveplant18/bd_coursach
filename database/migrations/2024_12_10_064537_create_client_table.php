@@ -13,7 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('Клиент', function (Blueprint $table) {
-            $table->bigIncrements('Код_клиента')->primary();
+            $table->increments('Код_клиента')->primary();
+            $table->string('ФИО', 255)->nullable();
             $table->string('Номер_телефона', 20)->unique();
             $table->date('Дата_рождения')->nullable();
             $table->string('Адрес_проживания', 255)->nullable();
