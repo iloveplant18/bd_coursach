@@ -29,9 +29,13 @@ class StatisticController extends Controller
     }
 
     private function getMostPopularService() {
-        $value = DB::select('select most_popular_service()')[0]->most_popular_service;
-        $value = substr($value, 1, strlen($value) - 2);
-        $result = explode(',', $value);
+        $value = DB::select('select most_popular_service()');
+        $result = ['-', '-'];
+        if (isset($value[0])) {
+            $value = $value[0]->most_popular_service;
+            $value = substr($value, 1, strlen($value) - 2);
+            $result = explode(',', $value);
+        }
         return [
             'name' => $result[0],
             'count' => $result[1],

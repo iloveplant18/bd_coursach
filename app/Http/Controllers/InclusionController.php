@@ -8,6 +8,7 @@ use App\Models\Service;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class InclusionController extends Controller
@@ -70,10 +71,12 @@ class InclusionController extends Controller
             ],
         ]);
 
+        $serviceDate = Carbon::parse($request->service_date)->format('Y-m-d');
+
         Inclusion::create([
             'Номер_бронирования' => $booking->Номер_бронирования,
             'Код_услуги' => $request->service_code,
-            'Дата_включения' => $request->service_date,
+            'Дата_включения' => $serviceDate,
         ]);
 
         return redirect(route('bookings.show', $booking->Номер_бронирования));

@@ -51,6 +51,7 @@ return new class extends Migration
     {
         DB::statement('drop trigger if exists update_booking_cost_after_insert_inclusion on Включение');
         DB::statement('drop trigger if exists update_booking_cost_after_update_inclusion on Включение');
-        DB::statement('drop function if exists update_booking_cost_by_inclusion()');
+        DB::statement('drop function update_booking_cost_by_inclusion();');
+        DB::statement("drop function if exists postgres.public.update_booking_cost_by_inclusion");
     }
 };
