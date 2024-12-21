@@ -28,18 +28,13 @@ class RoomObserver
      */
     public function created(Room $room): void
     {
-        Image::create([
-            'src' => self::$images->random(),
-            'room_id' => $room->Номер_комнаты,
-        ]);
-        Image::create([
-            'src' => self::$images->random(),
-            'room_id' => $room->Номер_комнаты,
-        ]);
-        Image::create([
-            'src' => self::$images->random(),
-            'room_id' => $room->Номер_комнаты,
-        ]);
+        $images = self::$images->random(3);
+        foreach ($images as $image) {
+            Image::create([
+                'src' => $image,
+                'room_id' => $room->Номер_комнаты,
+            ]);
+        }
     }
 
     /**

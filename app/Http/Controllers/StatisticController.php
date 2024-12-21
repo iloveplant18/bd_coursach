@@ -49,7 +49,9 @@ class StatisticController extends Controller
     }
 
     private function getUnpaidBookings() {
-        $bookings = DB::select('select find_unpaid_bookings()')[0]->find_unpaid_bookings;
+        $functionResult = DB::select('select find_unpaid_bookings()');
+        if (!isset($functionResult[0])) return null;
+        $bookings = $functionResult[0]->find_unpaid_bookings;
         $bookingsCollection = collect($bookings);
         $result = $bookingsCollection->map(function ($item) {
             $value = explode(',', $item)[0];

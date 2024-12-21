@@ -22,7 +22,7 @@ return new class extends Migration
               SELECT COUNT(*) INTO total_bookings FROM Бронирование;
               SELECT COUNT(*) INTO cancelled_bookings FROM Отмененные_бронирования;
 
-              IF total_bookings = 0 THEN
+              IF total_bookings + cancelled_bookings = 0 THEN
                 RETURN 0; -- Избегаем деления на ноль
               ELSE
                 RETURN (cancelled_bookings::NUMERIC / (total_bookings + cancelled_bookings)::NUMERIC) * 100;

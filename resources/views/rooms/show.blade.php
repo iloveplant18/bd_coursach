@@ -3,8 +3,8 @@
         Room info
     </x-slot>
 
-    <div class="max-w-5xl mx-auto">
-        <div class="grid sm:grid-cols-5 gap-20">
+    <div class="max-w-5xl mx-auto pb-20">
+        <div class="grid sm:grid-cols-5 gap-x-20 gap-y-5">
             <div class="col-span-3 grid grid-cols-2 gap-5 h-fit">
                 <h2 class="pb-2 col-span-2 text-5xl font-bold border-b-2 border-gray-300">
                     Room number {{ $room->Номер_комнаты }}
@@ -95,7 +95,11 @@
     <script>
         const swiper = new Swiper('.swiper', {
             loop: true,
-            slidesPerView: 2,
+            breakpoints: {
+                640: {
+                    slidesPerView: 2
+                },
+            },
             spaceBetween: 20,
             navigation: {
                 nextEl: '.swiper-button-next',
@@ -107,11 +111,6 @@
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-    <!-- Initialize Swiper -->
-    <script>
-        var swiper = new Swiper(".swiper", {});
-    </script>
 
     <style>
         html,

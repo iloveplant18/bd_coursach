@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::unguard();
         Gate::define('do-client-action', function ($user) {
-            return $user->client_code || $user->personal->Должность === 'Администратор';
+            return $user->client_code;
         });
         Gate::define('do-personal-action', function ($user) {
             return $user->personal_number;

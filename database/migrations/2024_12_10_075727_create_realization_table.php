@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('Номер_осуществления');
             $table->foreignId('Номер_применения')
                 ->constrained('Включение', 'Номер_применения')
-                ->restrictOnDelete()
+                ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->foreignId('Номер_работника')
                 ->constrained('Персонал', 'Номер_работника')
