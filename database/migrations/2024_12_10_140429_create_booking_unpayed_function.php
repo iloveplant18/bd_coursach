@@ -13,40 +13,40 @@ return new class extends Migration
     public function up(): void
     {
         DB::statement("
-            CREATE OR REPLACE FUNCTION find_unpaid_bookings()
-            RETURNS TABLE (
-                Номер_бронирования BIGINT,
-                Стоимость_бронирования DECIMAL(10, 2),
-                Долг DECIMAL(10, 2),
-                ФИО_клиента VARCHAR(255),
-                Код_клиента BIGINT
-            ) AS $$
-            BEGIN
-              RETURN QUERY
-              SELECT
-                b.Номер_бронирования,
-                b.Стоимость,
-                b.Стоимость - COALESCE((
-                  SELECT
-                    SUM(о.Сумма)
-                  FROM Оплата AS о
-                  WHERE
-                    о.Номер_бронирования = b.Номер_бронирования
-                ), 0) AS Долг,  -- Обратите внимание на COALESCE
-                c.ФИО AS ФИО_клиента,
-                b.Код_клиента
-              FROM Бронирование AS b
-              JOIN Клиент AS c ON b.Код_клиента = c.Код_клиента
-              WHERE
-                b.Стоимость > COALESCE((
-                  SELECT
-                    SUM(о.Сумма)
-                  FROM Оплата AS о
-                  WHERE
-                    о.Номер_бронирования = b.Номер_бронирования
-                ), 0); -- Добавили условие WHERE
-            END;
-            $$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION find_unpaid_bookings()
+RETURNS TABLE (
+    Номер_бронирования BIGINT,
+    Стоимость_бронирования DECIMAL(10, 2),
+    Долг DECIMAL(10, 2),
+    ФИО_клиента VARCHAR(255),
+    Код_клиента INTEGER
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT
+    b.Номер_бронирования::BIGINT,   -- Явно приводим к BIGINT
+    b.Стоимость::DECIMAL(10, 2),      -- Явно приводим к DECIMAL(10, 2)
+    (b.Стоимость - COALESCE((
+      SELECT
+        SUM(о.Сумма)
+      FROM Оплата AS о
+      WHERE
+        о.Номер_бронирования = b.Номер_бронирования
+    ), 0))::DECIMAL(10, 2) AS Долг,     -- Явно приводим к DECIMAL(10, 2)
+    c.ФИО::VARCHAR(255) AS ФИО_клиента, -- Явно приводим к VARCHAR(255)
+    b.Код_клиента::INTEGER   -- Явно приводим к INTEGER
+  FROM Бронирование AS b
+  JOIN Клиент AS c ON b.Код_клиента = c.Код_клиента
+  WHERE
+    b.Стоимость > COALESCE((
+      SELECT
+        SUM(о.Сумма)
+      FROM Оплата AS о
+      WHERE
+        о.Номер_бронирования = b.Номер_бронирования
+    ), 0);
+END;
+$$ LANGUAGE plpgsql;
 
         ");
     }

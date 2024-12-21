@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -43,6 +44,10 @@ class RoomsController extends Controller
             ->join('Тариф', 'Тариф.Код_тарифа', '=', 'Номер.Код_тарифа')
             ->where('Номер_комнаты', '=', $id)
             ->first();
-        return view('rooms.show', ['room' => $room]);
+        $images = Image::where('room_id', $id)->get();
+        return view('rooms.show', [
+            'room' => $room,
+            'images' => $images,
+        ]);
     }
 }
